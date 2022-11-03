@@ -67,7 +67,7 @@ jobs:
       run: |
         
         cd Armbian
-        ./compile.sh BOARD=ROCK960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no
+        ./compile.sh BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no
         #make -j$(nproc) || make -j1 || make -j1 V=s
 
 
