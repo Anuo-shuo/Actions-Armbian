@@ -51,8 +51,8 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        git clone $REPO_URL -b $REPO_BRANCH Armbian
+        ln -sf /workdir/Armbian $GITHUB_WORKSPACE/Armbian
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
