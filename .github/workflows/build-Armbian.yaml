@@ -70,7 +70,8 @@ jobs:
         cd output
         echo $PWD
         tree /f >> ./images/output_tree.txt
-        mv ./deb/* ./images
+        mv ./debs/* ./images
+        cd ..
         
 
     - name: Upload bin directory
