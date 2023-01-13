@@ -73,6 +73,7 @@ jobs:
         cp ./debs/* ./images
         cd ..
         echo $PWD
+        ls ./output/images
         echo "::set-output name=status::success"
 
 
