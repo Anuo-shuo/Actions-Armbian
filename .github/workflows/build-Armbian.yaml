@@ -72,7 +72,9 @@ jobs:
         tree /f >> ./images/output_tree.txt
         cp ./debs/* ./images
         cd ..
-        
+        echo $PWD
+        echo "::set-output name=status::success"
+
 
     - name: Upload debs directory
       uses: actions/upload-artifact@main
@@ -94,7 +96,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: Armbian_firmware_rock960
+        name: Armbian_rock960_images
         path: ${{ env.FIRMWARE }}
 
     - name: Generate release tag
