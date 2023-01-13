@@ -60,13 +60,13 @@ jobs:
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
+    
     - name: Compile the firmware
       id: compile
       run: |       
         cd Armbian
         echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no BUILD_ONLY=kernel KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img 
+        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no BUILD_ONLY=kernel KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img 
         cd output
         echo $PWD
         tree /f >> ./images/output_tree.txt
@@ -120,3 +120,5 @@ jobs:
       with:
         retain_days: 1
         keep_minimum_runs: 3
+        
+# ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no BUILD_ONLY=kernel KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img 
