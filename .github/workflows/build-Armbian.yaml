@@ -66,7 +66,7 @@ jobs:
       run: |       
         cd Armbian
         echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no BUILD_ONLY=kernel KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img 
+        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img 
         cd output
         echo $PWD
         tree /f >> ./images/output_tree.txt
