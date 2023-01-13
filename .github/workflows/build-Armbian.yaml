@@ -70,21 +70,22 @@ jobs:
         cd output
         echo $PWD
         tree /f >> ./images/output_tree.txt
-        mv ./debs/* ./images
+        cp ./debs/* ./images
         cd ..
         
 
-    - name: Upload bin directory
+    - name: Upload debs directory
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: Armbian_image_rock960_bin
-        path: Armbian/output/images
+        name: Armbian_rock960_debs
+        path: Armbian/output/debs
 
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
+        echo $PWD
         cd Armbian/output/images/
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
@@ -100,6 +101,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
+        echo $PWD
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
         touch release.txt
         [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
