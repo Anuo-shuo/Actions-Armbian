@@ -65,8 +65,8 @@ jobs:
       id: compile
       run: |       
         cd Armbian
-        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img 
-
+        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_ONLY=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img 
+        mv ./output/deb/* ./output/images
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
