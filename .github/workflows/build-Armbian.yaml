@@ -69,7 +69,7 @@ jobs:
         ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,7z
         cd output
         echo $PWD
-        cp ./debs/* ./images
+        sudo cp ./debs/* ./images
         cd ..
         echo $PWD
         ls ./output/images
