@@ -69,7 +69,6 @@ jobs:
         ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,7z
         cd output
         echo $PWD
-        sudo tree /f >> ./images/output_tree.txt
         cp ./debs/* ./images
         cd ..
         echo $PWD
@@ -79,7 +78,7 @@ jobs:
 
     - name: Upload debs directory
       uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      if: !cancelled() && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: Armbian_rock960_debs
         path: Armbian/output/debs
