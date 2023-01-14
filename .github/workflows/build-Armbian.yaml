@@ -78,7 +78,7 @@ jobs:
 
     - name: Upload debs directory
       uses: actions/upload-artifact@main
-      if: !cancelled() && env.UPLOAD_BIN_DIR == 'true'
+      if: env.UPLOAD_BIN_DIR == 'true' && !cancelled()
       with:
         name: Armbian_rock960_debs
         path: Armbian/output/debs
