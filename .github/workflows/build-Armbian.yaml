@@ -69,8 +69,8 @@ jobs:
         ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
         mkdir github_release
         ls
-        cp -r Armbian/output/debs/* Armbian/github_release/
-        cp -r Armbian/output/images/* Armbian/github_release/
+        cp -r ./output/debs/* ./github_release/
+        cp -r ./output/images/* ./github_release/
         ls ./github_release/
         echo "::set-output name=status::success"
 
