@@ -66,11 +66,11 @@ jobs:
       run: |       
         cd Armbian
         echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,7z
+        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
         mkdir github_release
         ls
-        cp Armbian/output/debs/* Armbian/github_release/
-        cp Armbian/output/images/* Armbian/github_release/
+        cp -r Armbian/output/debs/* Armbian/github_release/
+        cp -r Armbian/output/images/* Armbian/github_release/
         ls ./github_release/
         echo "::set-output name=status::success"
 
