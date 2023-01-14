@@ -67,14 +67,12 @@ jobs:
         cd Armbian
         echo $PWD
         ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,7z
-        cd output
-        echo $PWD
-        sudo cp ./debs/* ./images
-        cd ..
-        echo $PWD
-        ls ./output/images
+        mkdir github_release
+        ls
+        cp Armbian/output/debs/* Armbian/github_release/
+        cp Armbian/output/images/* Armbian/github_release/
+        ls ./github_release/
         echo "::set-output name=status::success"
-
 
     - name: Upload debs directory
       uses: actions/upload-artifact@main
@@ -82,13 +80,20 @@ jobs:
       with:
         name: Armbian_rock960_debs
         path: Armbian/output/debs
+        
+    - name: Upload images directory
+      uses: actions/upload-artifact@main
+      if: env.UPLOAD_BIN_DIR == 'true' && !cancelled()
+      with:
+        name: Armbian_rock960_images
+        path: Armbian/output/images
 
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         echo $PWD
-        cd Armbian/output/images/
+        cd Armbian/github_release
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
@@ -96,7 +101,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: Armbian_rock960_images
+        name: Armbian_rock960_release
         path: ${{ env.FIRMWARE }}
 
     - name: Generate release tag
