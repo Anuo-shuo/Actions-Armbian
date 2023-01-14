@@ -66,7 +66,7 @@ jobs:
       run: |       
         cd Armbian
         echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
         mkdir github_release
         ls
         cp -r Armbian/output/debs/* Armbian/github_release/
