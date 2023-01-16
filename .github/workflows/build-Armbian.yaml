@@ -145,6 +145,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         echo $PWD
+        cd Armbian
         mkdir github_release
         ls
         cp -r ./output/debs/* ./github_release/
