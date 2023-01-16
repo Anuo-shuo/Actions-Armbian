@@ -9,6 +9,18 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
+      branch:
+        description: 'Armbian BRANCH(current|edge)'
+        required: false
+        default: 'edge'
+      release:
+        description: 'Armbian RELEASE(jammy|lunar)'
+        required: false
+        default: 'lunar'
+      desktop:
+        description: 'Armbian DESKTOP(yes|no)'
+        required: false
+        default: 'no'
 
 env:
   REPO_URL: https://github.com/Anuo-shuo/Armbian
@@ -61,13 +73,85 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     
-    - name: Compile the firmware
-      id: compile
+    - name: Compile firmware(edge,lunar,cli)
+      id: compile_edge_lunar_cli
+      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'no') 
+      run: |       
+        cd Armbian
+        echo $PWD
+        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        #./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+    
+    - name: Compile firmware(current,lunar,cli)
+      id: compile_current_lunar_cli
+      if: (github.event.inputs.branch == 'current' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'no') 
+      run: |       
+        cd Armbian
+        echo $PWD
+        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        #./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+    
+    - name: Compile firmware(edge,jammy,cli)
+      id: compile_edge_jammy_cli
+      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'no') 
+      run: |       
+        cd Armbian
+        echo $PWD
+        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        #./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+    
+    - name: Compile firmware(current,jammy,cli)
+      id: compile_current_jammy_cli
+      if: (github.event.inputs.branch == 'current' && github.event.inputs.release  == 'jammy' && github.event.inputs.desktop  == 'no') 
+      run: |       
+        cd Armbian
+        echo $PWD
+        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        #./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+  
+    #desktop
+    
+    - name: Compile firmware(edge,lunar,desktop)
+      id: compile_edge_lunar_desktop
+      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'yes') 
       run: |       
         cd Armbian
         echo $PWD
         #./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
         ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+    
+    - name: Compile firmware(current,lunar,desktop)
+      id: compile_current_lunar_desktop
+      if: (github.event.inputs.branch == 'current' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'yes') 
+      run: |       
+        cd Armbian
+        echo $PWD
+        #./compile.sh  BOARD=rock960 BRANCH=current RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+    
+    - name: Compile firmware(edge,jammy,desktop)
+      id: compile_edge_jammy_desktop
+      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'yes') 
+      run: |       
+        cd Armbian
+        echo $PWD
+        #./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+    
+    - name: Compile firmware(current,jammy,desktop)
+      id: compile_current_jammy_desktop
+      if: (github.event.inputs.branch == 'current' && github.event.inputs.release  == 'jammy' && github.event.inputs.desktop  == 'yes') 
+      run: |       
+        cd Armbian
+        echo $PWD
+        #./compile.sh  BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+  
+    
+    - name: Cpoy firmware
+      id: copy
+      run: |
+        echo $PWD
         mkdir github_release
         ls
         cp -r ./output/debs/* ./github_release/
