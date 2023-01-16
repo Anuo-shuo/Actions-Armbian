@@ -142,6 +142,7 @@ jobs:
     
     - name: Copy firmware
       id: copy
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         echo $PWD
         mkdir github_release
