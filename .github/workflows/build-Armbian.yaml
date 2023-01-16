@@ -85,7 +85,7 @@ jobs:
 
     - name: Compile firmware(edge,jammy,cli)
       id: compile_edge_jammy_cli
-      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'no') 
+      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'jammy' && github.event.inputs.desktop  == 'no') 
       run: |       
         cd Armbian
         echo $PWD
@@ -119,7 +119,7 @@ jobs:
     
     - name: Compile firmware(edge,jammy,desktop)
       id: compile_edge_jammy_desktop
-      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'yes') 
+      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'jammy' && github.event.inputs.desktop  == 'yes') 
       run: |       
         cd Armbian
         echo $PWD
