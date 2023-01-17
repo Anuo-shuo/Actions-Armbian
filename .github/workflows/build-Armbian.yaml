@@ -5,17 +5,25 @@ on:
   repository_dispatch:
   workflow_dispatch:
     inputs:
+      board:
+        description: 'Board Select(rock960)'
+        required: true
+        default: 'edge'
       branch:
         description: 'Kernel Select(current|edge)'
-        required: false
+        required: true
         default: 'edge'
       release:
         description: 'Ubuntu Selsect(jammy|lunar)'
-        required: false
+        required: true
         default: 'jammy'
       desktop:
         description: 'Armbian Desktop(yes|no)'
-        required: false
+        required: true
+        default: 'no'
+      minimal:
+        description: 'Armbian Minimal(yes|no)'
+        required: true
         default: 'no'
       ssh:
         description: 'SSH connection to Actions'
@@ -37,9 +45,11 @@ env:
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
   
+  BOARD: rock960
   BRANCH: egde
   RELEASE: jammy
   DESKTOP: no
+  MINIMAL: no
 
 jobs:
   build:
@@ -53,9 +63,11 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        echo "BOARD=${{ github.event.inputs.board }}" >> $GITHUB_ENV
         echo "BRANCH=${{ github.event.inputs.branch }}" >> $GITHUB_ENV
         echo "RELEASE=${{ github.event.inputs.release }}" >> $GITHUB_ENV
         echo "DESKTOP=${{ github.event.inputs.desktop }}" >> $GITHUB_ENV
+        echo "MINIMAL=${{ github.event.inputs.minimal }}" >> $GITHUB_ENV
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
@@ -74,76 +86,27 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     
-    - name: Compile firmware(edge,lunar,cli)
-      id: compile_edge_lunar_cli
-      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'no') 
+    - name: Compile firmware(CLI)
+      id: compile_cli
+      if: github.event.inputs.desktop  == 'no'
       run: |       
         cd Armbian
         echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
-
-    - name: Compile firmware(current,lunar,cli)
-      id: compile_current_lunar_cli
-      if: (github.event.inputs.branch == 'current' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'no') 
-      run: |       
-        cd Armbian
-        echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
-
-    - name: Compile firmware(edge,jammy,cli)
-      id: compile_edge_jammy_cli
-      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'jammy' && github.event.inputs.desktop  == 'no') 
-      run: |       
-        cd Armbian
-        echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        sudo ./compile.sh  BOARD=${{env.BOARD}} BRANCH=${{env.BRANCH}} RELEASE=${{env.RELEASE}} BUILD_MINIMAL=${{env.MINIMAL}} BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        echo "status=success" >> $GITHUB_OUTPUT
     
-    - name: Compile firmware(current,jammy,cli)
-      id: compile_current_jammy_cli
-      if: (github.event.inputs.branch == 'current' && github.event.inputs.release  == 'jammy' && github.event.inputs.desktop  == 'no') 
+    - name: Compile firmware(Desktop)
+      id: compile_desktop
+      if: github.event.inputs.desktop  == 'yes'
       run: |       
         cd Armbian
         echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
- 
-    #desktop
-    
-    - name: Compile firmware(edge,lunar,desktop)
-      id: compile_edge_lunar_desktop
-      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'yes') 
-      run: |       
-        cd Armbian
-        echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
-    
-    - name: Compile firmware(current,lunar,desktop)
-      id: compile_current_lunar_desktop
-      if: (github.event.inputs.branch == 'current' && github.event.inputs.release  == 'lunar' && github.event.inputs.desktop  == 'yes') 
-      run: |       
-        cd Armbian
-        echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=lunar BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
-    
-    - name: Compile firmware(edge,jammy,desktop)
-      id: compile_edge_jammy_desktop
-      if: (github.event.inputs.branch == 'edge' && github.event.inputs.release  == 'jammy' && github.event.inputs.desktop  == 'yes') 
-      run: |       
-        cd Armbian
-        echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
-    
-    - name: Compile firmware(current,jammy,desktop)
-      id: compile_current_jammy_desktop
-      if: (github.event.inputs.branch == 'current' && github.event.inputs.release  == 'jammy' && github.event.inputs.desktop  == 'yes') 
-      run: |       
-        cd Armbian
-        echo $PWD
-        ./compile.sh  BOARD=rock960 BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
-  
+        sudo ./compile.sh  BOARD=${{env.BOARD}} BRANCH=${{env.BRANCH}} RELEASE=${{env.RELEASE}} BUILD_MINIMAL=${{env.MINIMAL}} BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+        echo "status=success" >> $GITHUB_OUTPUT
     
     - name: Copy firmware
       id: copy
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled() && (steps.compile_cli.outputs.status == 'success' ||  steps.compile_desktop.outputs.status == 'success')
       run: |
         echo $PWD
         cd Armbian
@@ -179,14 +142,14 @@ jobs:
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
-      if: steps.organize.outputs.status == 'success' && !cancelled()
+      if: steps.organize.outputs.status == 'success' && !cancelled() && (steps.compile_cli.outputs.status == 'success' ||  steps.compile_desktop.outputs.status == 'success')
       with:
         name: Armbian_rock960_release
         path: ${{ env.FIRMWARE }}
 
     - name: Generate release tag
       id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled() && (steps.compile_cli.outputs.status == 'success' ||  steps.compile_desktop.outputs.status == 'success')
       run: |
         echo $PWD
         echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
@@ -197,12 +160,10 @@ jobs:
 
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
+      if: steps.tag.outputs.status == 'success' && !cancelled()&& (steps.compile_cli.outputs.status == 'success' ||  steps.compile_desktop.outputs.status == 'success')
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
-        
-# ./compile.sh  BOARD=rock960 BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no BUILD_ONLY=kernel KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img 
