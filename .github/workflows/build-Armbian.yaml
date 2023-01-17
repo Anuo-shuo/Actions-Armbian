@@ -1,4 +1,3 @@
-
 name: Build Armbian
 
 on:
@@ -8,7 +7,7 @@ on:
       board:
         description: 'Board Select(rock960)'
         required: true
-        default: 'edge'
+        default: 'rock960'
       branch:
         description: 'Kernel Select(current|edge)'
         required: true
