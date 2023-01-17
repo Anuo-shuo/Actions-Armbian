@@ -12,7 +12,7 @@ on:
       release:
         description: 'Ubuntu Selsect(jammy|lunar)'
         required: false
-        default: 'lunar'
+        default: 'jammy'
       desktop:
         description: 'Armbian Desktop(yes|no)'
         required: false
@@ -36,6 +36,10 @@ env:
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
+  
+  BRANCH: egde
+  RELEASE: jammy
+  DESKTOP: no
 
 jobs:
   build:
@@ -49,6 +53,9 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        echo "BRANCH=${{ github.event.inputs.branch }}" >> $GITHUB_ENV
+        echo "RELEASE=${{ github.event.inputs.release }}" >> $GITHUB_ENV
+        echo "DESKTOP=${{ github.event.inputs.desktop }}" >> $GITHUB_ENV
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
