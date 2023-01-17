@@ -105,7 +105,7 @@ jobs:
     
     - name: Copy firmware
       id: copy
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled() && (steps.compile_cli.outputs.status == 'success' ||  steps.compile_desktop.outputs.status == 'success')
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         echo $PWD
         cd Armbian
@@ -113,6 +113,7 @@ jobs:
         ls
         cp -r ./output/debs/* ./github_release/
         cp -r ./output/images/* ./github_release/
+        cp -r ./output/debs/${{env.RELEASE}}/* ./github_release/
         ls ./github_release/
         echo "status=success" >> $GITHUB_OUTPUT
 
