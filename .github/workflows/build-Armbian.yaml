@@ -100,7 +100,7 @@ jobs:
       run: |       
         cd Armbian
         echo $PWD
-        sudo ./compile.sh  BOARD=${{env.BOARD}} BRANCH=${{env.BRANCH}} RELEASE=${{env.RELEASE}} BUILD_MINIMAL=${{env.MINIMAL}} BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_full" DESKTOP_APPGROUPS_SELECTED="browsers editors programming"
+        sudo ./compile.sh  BOARD=${{env.BOARD}} BRANCH=${{env.BRANCH}} RELEASE=${{env.RELEASE}} BUILD_MINIMAL=${{env.MINIMAL}} BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="xfce" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_base" DESKTOP_APPGROUPS_SELECTED="3dsupport chat desktop_tools editors email internet multimedia office programming remote_desktop"
         echo "status=success" >> $GITHUB_OUTPUT
     
     - name: Copy firmware
