@@ -91,7 +91,7 @@ jobs:
       run: |       
         cd Armbian
         echo $PWD
-        sudo ./compile.sh  BOARD=${{env.BOARD}} BRANCH=${{env.BRANCH}} RELEASE=${{env.RELEASE}} BUILD_MINIMAL=${{env.MINIMAL}} BUILD_ONLY=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
+        sudo ./compile.sh  BOARD=${{env.BOARD}} BRANCH=${{env.BRANCH}} RELEASE=${{env.RELEASE}} BUILD_MINIMAL=${{env.MINIMAL}} BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z
         echo "status=success" >> $GITHUB_OUTPUT
     
     - name: Compile firmware(Desktop)
@@ -100,7 +100,7 @@ jobs:
       run: |       
         cd Armbian
         echo $PWD
-        sudo ./compile.sh  BOARD=${{env.BOARD}} BRANCH=${{env.BRANCH}} RELEASE=${{env.RELEASE}} BUILD_MINIMAL=${{env.MINIMAL}} BUILD_ONLY=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="kde" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_base" DESKTOP_APPGROUPS_SELECTED="3dsupport browsers chat desktop_tools editors email internet multimedia office programming remote_desktop" NO_APT_CACHER="yes" 
+        sudo ./compile.sh  BOARD=${{env.BOARD}} BRANCH=${{env.BRANCH}} RELEASE=${{env.RELEASE}} BUILD_MINIMAL=${{env.MINIMAL}} BUILD_DESKTOP=yes KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,7z DESKTOP_ENVIRONMENT="kde" DESKTOP_ENVIRONMENT_CONFIG_NAME="config_base" DESKTOP_APPGROUPS_SELECTED="3dsupport browsers chat desktop_tools editors email internet multimedia office programming remote_desktop" NO_APT_CACHER="yes" 
         echo "status=success" >> $GITHUB_OUTPUT
     
     - name: Copy firmware
