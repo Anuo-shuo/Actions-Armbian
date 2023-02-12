@@ -113,10 +113,20 @@ jobs:
         ls
         cp -r ./output/debs/* ./github_release/
         cp -r ./output/images/* ./github_release/
+        ls ./github_release/
+        cd ..
+        echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: Copy desktop debs
+      id: copy_desktop
+      if: env.DESKTOP == 'yes' && !cancelled()
+      run: |
+        echo $PWD
+        cd Armbian
         cp -r ./output/debs/${{env.RELEASE}}/* ./github_release/
         ls ./github_release/
         echo "status=success" >> $GITHUB_OUTPUT
-
+    
     - name: Upload debs directory
       uses: actions/upload-artifact@main
       if: env.UPLOAD_BIN_DIR == 'true' && !cancelled()
